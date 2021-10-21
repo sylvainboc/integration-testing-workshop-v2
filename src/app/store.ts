@@ -1,17 +1,26 @@
-import { configureStore, ThunkAction, Action } from '@reduxjs/toolkit';
-import counterReducer from '../features/counter/counterSlice';
+import { configureStore, ThunkAction, Action } from '@reduxjs/toolkit'
+import catReducer from '../features/cat/catSlice'
+import createSagaMiddleware from 'redux-saga'
+import catSaga from '../features/cat/cat.saga'
+
+export const sagaMiddleware = createSagaMiddleware()
+
+const middleware = [sagaMiddleware]
 
 export const store = configureStore({
-  reducer: {
-    counter: counterReducer,
-  },
-});
+    reducer: {
+        cat: catReducer,
+    },
+    middleware,
+})
 
-export type AppDispatch = typeof store.dispatch;
-export type RootState = ReturnType<typeof store.getState>;
+sagaMiddleware.run(catSaga)
+
+export type AppDispatch = typeof store.dispatch
+export type RootState = ReturnType<typeof store.getState>
 export type AppThunk<ReturnType = void> = ThunkAction<
-  ReturnType,
-  RootState,
-  unknown,
-  Action<string>
->;
+    ReturnType,
+    RootState,
+    unknown,
+    Action<string>
+>
